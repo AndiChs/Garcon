@@ -17,8 +17,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".LogInActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".CreateOrJoinActivity"/>
+        <activity android:name=".CreateRestaurantActivity"/>
+        <activity android:name=".JoinRestaurantActivity"/>
+
     </application>
 
 </manifest>

@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="info_text_value">You don\'t belong to any restaurant. Please select an option:</string>
+    <string name="join_a_restaurant_value">Join A Restaurant</string>
+    <string name="create_a_restaurant_value">Create A Restaurant</string>
+    <string name="the_name_of_the_restaurant_value">The Name of The Restaurant</string>
+    <string name="the_cvr_of_the_restaurant_value">The CVR of The Restaurant</string>
+    <string name="the_address_of_the_restaurant_value">The Address of The Restaurant</string>
+    <string name="submit_button_value">SUBMIT</string>
+    <string name="back_button_value">Back</string>
+    <string name="application_logo">Application Logo</string>
 </resources>

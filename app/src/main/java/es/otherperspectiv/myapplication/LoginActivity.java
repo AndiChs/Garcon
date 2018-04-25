@@ -13,6 +13,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -69,13 +74,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    // Create intent for the new activity
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
-                    // Add flag, when the user presses the back button will not come back to the login screen.
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-                    startActivity(intent);
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+
+                    ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            Intent intent;
+                            User user = dataSnapshot.getValue(User.class);
+
+                            // Create intent for the new activity
+                            if(user.getRestaurantId().equals("0"))
+                                intent = new Intent(LoginActivity.this, CreateOrJoinRestaurantActivity.class);
+                            else
+                                intent = new Intent(LoginActivity.this, MainActivity.class);
+                            // Add flag, when the user presses the back button will not come back to the login screen.
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+
                 }
                 else{
                     Toast.makeText(LoginActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();

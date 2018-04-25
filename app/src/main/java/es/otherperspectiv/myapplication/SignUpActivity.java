@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -36,8 +37,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
 
     public void registerUser(){
-        String emailAddress = editTextEmailAddress.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
+        final String emailAddress = editTextEmailAddress.getText().toString().trim();
+        final String password = editTextPassword.getText().toString().trim();
 
         if(emailAddress.isEmpty()){
             editTextEmailAddress.setError("Email address is required.");
@@ -68,6 +69,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(SignUpActivity.this, "User Registered Successful", Toast.LENGTH_SHORT).show();
+                    User user = new User(emailAddress, password);
+                    FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance()
+                            .getCurrentUser().getUid())
+                            .setValue(user);
                 }
                 else{
                     if(task.getException() instanceof FirebaseAuthUserCollisionException){

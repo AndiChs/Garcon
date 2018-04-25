@@ -20,7 +20,11 @@
         <activity android:name=".LogInActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".CreateOrJoinRestaurantActivity" />
-        <activity android:name=".CreateRestaurantActivity"></activity>
+        <activity android:name=".CreateRestaurantActivity" />
+        <activity android:name=".JoinRestaurantActivity" />
+        <activity
+            android:name=".MainWaiterActivity"
+            android:label="@string/title_activity_main_waiter"></activity>
     </application>
 
 </manifest>

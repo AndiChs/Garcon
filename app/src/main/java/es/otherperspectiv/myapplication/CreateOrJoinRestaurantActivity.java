@@ -22,7 +22,7 @@ public class CreateOrJoinRestaurantActivity extends AppCompatActivity {
         buttonJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(CreateOrJoinRestaurantActivity.this, JoinRestaurantActivity.class));
             }
         });
 

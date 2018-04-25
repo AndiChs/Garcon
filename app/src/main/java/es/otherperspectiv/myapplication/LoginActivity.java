@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             if(user.getRestaurantId().equals("0"))
                                 intent = new Intent(LoginActivity.this, CreateOrJoinRestaurantActivity.class);
                             else
-                                intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent = new Intent(LoginActivity.this, MainWaiterActivity.class);
                             // Add flag, when the user presses the back button will not come back to the login screen.
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 

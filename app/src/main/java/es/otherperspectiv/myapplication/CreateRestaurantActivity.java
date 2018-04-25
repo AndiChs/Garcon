@@ -106,7 +106,7 @@ public class CreateRestaurantActivity extends AppCompatActivity {
         database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("restaurantId").setValue(id);
         database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("isManager").setValue(true);
 
-        Intent intent = new Intent(CreateRestaurantActivity.this, MainActivity.class);
+        Intent intent = new Intent(CreateRestaurantActivity.this, MainWaiterActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         startActivity(intent);

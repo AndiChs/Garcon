@@ -10,6 +10,7 @@ public class User {
     private boolean isAdmin;
     private boolean isManager;
     private String restaurantId;
+    private String name;
 
     public User() {
     }
@@ -26,6 +27,14 @@ public class User {
         this.isAdmin = isAdmin;
         this.isManager = isManager;
         this.restaurantId = restaurantId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {

@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private EditText editTextEmailAddress, editTextPassword;
+    private EditText editTextEmailAddress, editTextPassword, editTextName;
     private FirebaseAuth mAuth;
     private final String EMAIL_CONTENT = "Text";
     private final String PASSWORD_CONTENT = "Password";
@@ -30,15 +30,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         editTextEmailAddress = (EditText) findViewById(R.id.editTextEmailAddress);
+        editTextName =  (EditText) findViewById(R.id.editTextName);
 
         findViewById(R.id.buttonSignUp).setOnClickListener(this);
-        findViewById(R.id.buttonBack).setOnClickListener(this);
     }
 
 
     public void registerUser(){
         final String emailAddress = editTextEmailAddress.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
+        final String name = editTextName.getText().toString().trim();
 
         if(emailAddress.isEmpty()){
             editTextEmailAddress.setError("Email address is required.");
@@ -70,9 +71,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 if(task.isSuccessful()){
                     Toast.makeText(SignUpActivity.this, "User Registered Successful", Toast.LENGTH_SHORT).show();
                     User user = new User(emailAddress, password);
+
+                    user.setName(name);
+
                     FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance()
                             .getCurrentUser().getUid())
                             .setValue(user);
+
+                    startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
                 }
                 else{
                     if(task.getException() instanceof FirebaseAuthUserCollisionException){
@@ -89,9 +95,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.buttonSignUp:
                 registerUser();
                 System.out.println("test");
-                break;
-            case R.id.buttonBack:
-                startActivity(new Intent(this, LoginActivity.class));
                 break;
         }
     }

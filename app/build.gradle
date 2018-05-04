@@ -32,6 +32,8 @@ dependencies {
 
     // Bottom Navigation
     compile 'com.android.support:design:26.1.0'
+    // Network Requests
+    compile 'com.android.volley:volley:1.1.0'
 }
 
 

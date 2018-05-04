@@ -1,6 +1,7 @@
 package es.otherperspectiv.myapplication;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -15,6 +21,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreateRestaurantActivity extends AppCompatActivity {
 
@@ -76,9 +89,9 @@ public class CreateRestaurantActivity extends AppCompatActivity {
     }
 
     private void addRestaurant(){
-        String address = editTextAddress.getText().toString().trim();
-        String name = editTextName.getText().toString().trim();
-        String CVR = editTextCVR.getText().toString().trim();
+        final String address = editTextAddress.getText().toString().trim();
+        final String name = editTextName.getText().toString().trim();
+        final String CVR = editTextCVR.getText().toString().trim();
 
         if(name.isEmpty()){
             Toast.makeText(CreateRestaurantActivity.this, "The name of the company cannot be null.", Toast.LENGTH_SHORT).show();
@@ -95,22 +108,52 @@ public class CreateRestaurantActivity extends AppCompatActivity {
             return;
         }
 
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.POST,
+                Constants.URL_CREATE_RESTAURANT,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            if(!obj.getBoolean("error")){
+                                SharedPrefManager.getInstance(getApplicationContext()).setManager(obj.getInt("restaurantId"));
+                                Toast.makeText(getApplicationContext(), "Restaurant created successfully.", Toast.LENGTH_LONG).show();
 
-        String id = databaseRestaurants.push().getKey();
 
-        Restaurant restaurant = new Restaurant(id, CVR, name, address);
+                                Intent intent = new Intent(CreateRestaurantActivity.this, MainWaiterActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        databaseRestaurants.child(id).setValue(restaurant);
+                                startActivity(intent);
 
-        // Give the user Administrator rights to the restaurant
-        database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("restaurantId").setValue(id);
-        database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("isManager").setValue(true);
+                            } else {
+                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("cvr", CVR);
+                params.put("address", address);
+                params.put("name", name);
+                return params;
+            }
+        };
 
-        Intent intent = new Intent(CreateRestaurantActivity.this, MainWaiterActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        RequestHandler.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
 
-        startActivity(intent);
 
-        Toast.makeText(this, "Restaurant added to the database.", Toast.LENGTH_SHORT).show();
+
     }
 }

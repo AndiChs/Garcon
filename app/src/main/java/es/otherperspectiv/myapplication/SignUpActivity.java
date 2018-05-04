@@ -1,5 +1,6 @@
 package es.otherperspectiv.myapplication;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -9,10 +10,23 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -20,6 +34,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private FirebaseAuth mAuth;
     private final String EMAIL_CONTENT = "Text";
     private final String PASSWORD_CONTENT = "Password";
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +48,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         editTextName =  (EditText) findViewById(R.id.editTextName);
 
         findViewById(R.id.buttonSignUp).setOnClickListener(this);
+
+        progressDialog = new ProgressDialog(this);
     }
 
 
@@ -40,6 +57,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         final String emailAddress = editTextEmailAddress.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
         final String name = editTextName.getText().toString().trim();
+
 
         if(emailAddress.isEmpty()){
             editTextEmailAddress.setError("Email address is required.");
@@ -64,29 +82,67 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             editTextPassword.requestFocus();
             return;
         }
+        progressDialog.setMessage("Registering account...");
+        progressDialog.show();
+//        mAuth.createUserWithEmailAndPassword(emailAddress, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//            @Override
+//            public void onComplete(@NonNull Task<AuthResult> task) {
+//                if(task.isSuccessful()){
+//                    Toast.makeText(SignUpActivity.this, "User Registered Successful", Toast.LENGTH_SHORT).show();
+//                    User user = new User(emailAddress, password);
+//
+//                    user.setName(name);
+//
+//                    FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance()
+//                            .getCurrentUser().getUid())
+//                            .setValue(user);
+//
+//                    startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+//                }
+//                else{
+//                    if(task.getException() instanceof FirebaseAuthUserCollisionException){
+//                        Toast.makeText(SignUpActivity.this, "This email is already used.", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        });
 
-        mAuth.createUserWithEmailAndPassword(emailAddress, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(SignUpActivity.this, "User Registered Successful", Toast.LENGTH_SHORT).show();
-                    User user = new User(emailAddress, password);
 
-                    user.setName(name);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                Constants.URL_REGISTER,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
 
-                    FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance()
-                            .getCurrentUser().getUid())
-                            .setValue(user);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
 
-                    startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
-                }
-                else{
-                    if(task.getException() instanceof FirebaseAuthUserCollisionException){
-                        Toast.makeText(SignUpActivity.this, "This email is already used.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.hide();
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("username", emailAddress);
+                params.put("password", password);
+                params.put("name", name);
+                return params;
             }
-        });
+        };
+
+        RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
 
     @Override

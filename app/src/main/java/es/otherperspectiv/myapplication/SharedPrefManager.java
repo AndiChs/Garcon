@@ -16,6 +16,8 @@ public class SharedPrefManager {
     private static final String KEY_RESTAURANT_ID = "restaurantId";
     private static final String KEY_IS_MANAGER = "manager";
     private static final String KEY_ADMIN_LEVEL = "admin";
+    private static final String KEY_ORDER = "order";
+    private static final String KEY_ORDER_PRICE = "orderPrice";
 
     private SharedPrefManager(Context context) {
         mCtx = context;
@@ -43,9 +45,54 @@ public class SharedPrefManager {
         return true;
     }
 
+    public boolean addItemToOrder(String itemName, int itemPrice){
+        SharedPreferences sharedPreferences =  mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(KEY_ORDER, sharedPreferences.getString(KEY_ORDER, "") + " " + itemName );
+        editor.putInt(KEY_ORDER_PRICE, sharedPreferences.getInt(KEY_ORDER_PRICE, 0) + itemPrice);
+        editor.apply();
+        return true;
+    }
+
+    public boolean deleteOrders(){
+        SharedPreferences sharedPreferences =  mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(KEY_ORDER, "");
+        editor.putInt(KEY_ORDER_PRICE, 0);
+        editor.apply();
+        return true;
+    }
+
+    public String getOrderDescription(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(KEY_ORDER, "");
+    }
+
+    public int getOrderPrice(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(KEY_ORDER_PRICE, -1);
+    }
+
     public int getUserId(){
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getInt(KEY_USER_ID, -1);
+    }
+
+    public String getName(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(KEY_NAME, "Default");
+    }
+
+    public String getUsername(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(KEY_USERNAME, "Default");
+    }
+
+    public int getUserRestaurantId(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(KEY_RESTAURANT_ID, -1);
     }
 
     public boolean setManager(int restaurantId){
@@ -53,6 +100,22 @@ public class SharedPrefManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(KEY_RESTAURANT_ID, restaurantId);
         editor.putInt(KEY_IS_MANAGER, 1);
+        editor.apply();
+        return true;
+    }
+
+    public boolean setName(String name){
+        SharedPreferences sharedPreferences =  mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEY_NAME, name);
+        editor.apply();
+        return true;
+    }
+
+    public boolean setUsername(String username){
+        SharedPreferences sharedPreferences =  mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEY_USERNAME, username);
         editor.apply();
         return true;
     }
@@ -80,4 +143,5 @@ public class SharedPrefManager {
         editor.apply();
         return true;
     }
+
 }

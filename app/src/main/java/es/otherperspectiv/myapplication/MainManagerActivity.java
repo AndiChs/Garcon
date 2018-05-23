@@ -9,13 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-
-public class MainWaiterActivity extends AppCompatActivity {
+public class MainManagerActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
-    private WaiterHomeFragment waiterHomeFragment = new WaiterHomeFragment();
+    private ManagerHomeFragment managerHomeFragment = new ManagerHomeFragment();
     private WaiterNotificationFragment waiterNotificationFragment = new WaiterNotificationFragment();
-    private WaiterAddOrderFragment waiterAddOrderFragment = new WaiterAddOrderFragment();
+    private ManagerItemsFragment managerItemsFragment = new ManagerItemsFragment();
     private WaiterOrdersFragment waiterOrdersFragment = new WaiterOrdersFragment();
     private WaiterMoreFragment waiterMoreFragment = new WaiterMoreFragment();
 
@@ -26,7 +25,7 @@ public class MainWaiterActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    setFragment(waiterHomeFragment);
+                    setFragment(managerHomeFragment);
                     return true;
                 case R.id.navigation_orders:
                     setFragment(waiterOrdersFragment);
@@ -40,7 +39,7 @@ public class MainWaiterActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_add_order:
-                    setFragment(waiterAddOrderFragment);
+                    setFragment(managerItemsFragment);
                     return true;
             }
             return false;
@@ -53,7 +52,7 @@ public class MainWaiterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_waiter);
-        setFragment(waiterHomeFragment);
+        setFragment(managerHomeFragment);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -65,4 +64,5 @@ public class MainWaiterActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.container, fragment);
         fragmentTransaction.commit();
     }
+
 }

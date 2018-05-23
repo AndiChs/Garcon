@@ -47,7 +47,6 @@ public class CreateRestaurantActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_restaurant);
 
         database = FirebaseDatabase.getInstance();
-        databaseRestaurants = database.getReference("restaurants");
 
         editTextAddress = findViewById(R.id.editTextAddress);
         editTextCVR = findViewById(R.id.editTextCVR);
@@ -58,30 +57,7 @@ public class CreateRestaurantActivity extends AppCompatActivity {
         buttonCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseReference cvrReference = databaseRestaurants.child("CVR").child(editTextCVR.getText().toString().trim());
-
-                // Check if the CVR of the restaurant already exists
-                ValueEventListener eventListener = new ValueEventListener() {
-
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        // If it does not exist it will be added to the database
-                        if(!dataSnapshot.exists()){
-                            addRestaurant();
-                        }
-                        else{
-                            Toast.makeText(CreateRestaurantActivity.this, "This restaurant already exists in our database.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                };
-
-                cvrReference.addListenerForSingleValueEvent(eventListener);
+                addRestaurant();
 
             }
         });
@@ -120,7 +96,7 @@ public class CreateRestaurantActivity extends AppCompatActivity {
                                 SharedPrefManager.getInstance(getApplicationContext()).setManager(obj.getInt("restaurantId"));
                                 Toast.makeText(getApplicationContext(), "Restaurant created successfully.", Toast.LENGTH_LONG).show();
 
-
+                                System.out.println("test");
                                 Intent intent = new Intent(CreateRestaurantActivity.this, MainWaiterActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 

@@ -7,11 +7,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 		isset($_POST['userId'])){
 
 		$db = new DbOperations();
-		if($db->createRestaurantRequest($_POST['userId'], $_POST['restaurantId'])){
+		$result = $db->createRestaurantRequest($_POST['userId'], $_POST['restaurantId']);
+		if($result == 1){
 			$response['error'] = false;
-		} else{
+		} else if($result == 0){
 			$response['error'] = true;
 			$response['message'] = "You have already sent an application.";
+		} else if($result == 2){
+			$response['error'] = true;
+			$response['message'] = "This restaurant does not exist in our database.";
 		}
 	}
 	else{

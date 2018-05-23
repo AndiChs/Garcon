@@ -187,12 +187,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void changeActivity(){
-        Intent intent;
+        Intent intent = intent = new Intent(LoginActivity.this, MainWaiterActivity.class);;
         // Create intent for the new activity
-        //if(user.getRestaurantId().equals("0"))
-        intent = new Intent(LoginActivity.this, CreateOrJoinRestaurantActivity.class);
-        //else
-        // intent = new Intent(LoginActivity.this, MainWaiterActivity.class);
+        if(SharedPrefManager.getInstance(this).getUserRestaurantId() == 0) {
+            intent = new Intent(LoginActivity.this, CreateOrJoinRestaurantActivity.class);
+        }
+        if(SharedPrefManager.getInstance(this).isManager()) {
+            intent = new Intent(LoginActivity.this, MainManagerActivity.class);
+        }
+        System.out.println("Is manager value:" + SharedPrefManager.getInstance(this).isManager());
         // Add flag, when the user presses the back button will not come back to the login screen.
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

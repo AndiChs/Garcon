@@ -97,7 +97,7 @@ public class CreateRestaurantActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "Restaurant created successfully.", Toast.LENGTH_LONG).show();
 
                                 System.out.println("test");
-                                Intent intent = new Intent(CreateRestaurantActivity.this, MainWaiterActivity.class);
+                                Intent intent = new Intent(CreateRestaurantActivity.this, MainManagerActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                                 startActivity(intent);

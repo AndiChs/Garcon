@@ -15,9 +15,10 @@ import android.widget.Toast;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WaiterMoreFragment extends Fragment {
+public class ManagerMoreFragment extends Fragment implements View.OnClickListener{
 
-    public WaiterMoreFragment() {
+
+    public ManagerMoreFragment() {
         // Required empty public constructor
     }
 
@@ -26,26 +27,27 @@ public class WaiterMoreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_waiter_more, container, false);
+        return inflater.inflate(R.layout.fragment_manager_more, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button btnEditProfile = view.findViewById(R.id.btnEditProfile);
-        Button btnStats = view.findViewById(R.id.btnStats);
-        Button btnLogout = view.findViewById(R.id.btnRequests);
 
-        btnEditProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        view.findViewById(R.id.btnEditProfile).setOnClickListener(this);
+        view.findViewById(R.id.btnLogout).setOnClickListener(this);
+        view.findViewById(R.id.btnStats).setOnClickListener(this);
+        view.findViewById(R.id.btnAddShift).setOnClickListener(this);
+        view.findViewById(R.id.btnRequests).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btnEditProfile:
                 startActivity(new Intent(getContext(), WaiterMoreEditProfileActivity.class));
-            }
-        });
-
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                break;
+            case R.id.btnLogout:
                 User.getInstance(getContext()).logout();
                 Intent intent;
                 intent = new Intent(getContext(), LoginActivity.class);
@@ -54,15 +56,16 @@ public class WaiterMoreFragment extends Fragment {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 Toast.makeText(getContext(), "You have been logged out successfully.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btnStats.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext(), WaiterMoreStatisticsActivity.class));
-            }
-        });
-
+                break;
+            case R.id.btnStats:
+                startActivity(new Intent(getContext(), ManagerMoreStatisticsActivity.class));
+                break;
+            case R.id.btnAddShift:
+                startActivity(new Intent(getContext(), ManagerMoreAddShiftActivity.class));
+                break;
+            case R.id.btnRequests:
+                startActivity(new Intent(getContext(), ManagerMoreRequest.class));
+                break;
+        }
     }
 }

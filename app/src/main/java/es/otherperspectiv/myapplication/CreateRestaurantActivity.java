@@ -1,7 +1,6 @@
 package es.otherperspectiv.myapplication;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,18 +13,13 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -93,10 +87,9 @@ public class CreateRestaurantActivity extends AppCompatActivity {
                         try {
                             JSONObject obj = new JSONObject(response);
                             if(!obj.getBoolean("error")){
-                                SharedPrefManager.getInstance(getApplicationContext()).setManager(obj.getInt("restaurantId"));
+                                User.getInstance(getApplicationContext()).setManager(obj.getInt("restaurantId"));
                                 Toast.makeText(getApplicationContext(), "Restaurant created successfully.", Toast.LENGTH_LONG).show();
 
-                                System.out.println("test");
                                 Intent intent = new Intent(CreateRestaurantActivity.this, MainManagerActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
@@ -123,6 +116,8 @@ public class CreateRestaurantActivity extends AppCompatActivity {
                 params.put("cvr", CVR);
                 params.put("address", address);
                 params.put("name", name);
+                params.put("token", FirebaseInstanceId.getInstance().getToken());
+                params.put("userId", Integer.toString(User.getInstance(getApplicationContext()).getUserId()));
                 return params;
             }
         };

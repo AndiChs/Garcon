@@ -20,6 +20,14 @@ public class Constants {
     public static final String URL_DELETE_SHIFT = ROOT_URL + "restaurantDeleteShift.php";
     public static final String URL_INSERT_ORDER = ROOT_URL + "restaurantAddOrder.php";
     public static final String URL_DELETE_ITEM = ROOT_URL + "restaurantDeleteItem.php";
+    public static final String URL_ADD_ITEM = ROOT_URL + "restaurantAddItem.php";
+    public static final String URL_RESTAURANT_STATISTICS = ROOT_URL + "restaurantStatistics.php";
+    public static final String URL_GET_USER_DATA = ROOT_URL + "userLoadData.php";
+    public static final String URL_ACCEPT_REQUEST = ROOT_URL + "restaurantAcceptRequest.php";
+    public static final String URL_ADD_SHIFT = ROOT_URL + "userAddShift.php";
+    public static final String URL_REGISTER_TOKEN = ROOT_URL + "userRegisterToken.php";
+    public static final String URL_NOTIFICATIONS = ROOT_URL + "userNotifications.php";
+
 
 
 

@@ -10,6 +10,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,27 +18,27 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WaiterMoreStatistics extends AppCompatActivity {
+public class ManagerMoreStatisticsActivity extends AppCompatActivity {
 
-    private TextView tvName;
-    private TextView tvHours;
+    private TextView tvItems;
+    private TextView tvMembers;
+    private TextView tvRevenue;
     private TextView tvOrders;
-    private TextView tvShifts;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_waiter_more_statistics);
+        setContentView(R.layout.activity_manager_more_statistics);
 
-        tvName = findViewById(R.id.etName);
-        tvHours = findViewById(R.id.tvHours);
+        tvItems = findViewById(R.id.tvItems);
+        tvMembers = findViewById(R.id.tvMembers);
+        tvRevenue = findViewById(R.id.tvRevenue);
         tvOrders = findViewById(R.id.tvOrders);
-        tvShifts = findViewById(R.id.tvShifts);
 
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
-                Constants.URL_GET_WAITER_STATS,
+                Constants.URL_RESTAURANT_STATISTICS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -45,15 +46,16 @@ public class WaiterMoreStatistics extends AppCompatActivity {
                             JSONObject obj = new JSONObject(response);
                             if(!obj.getBoolean("error")){
                                 obj = obj.getJSONObject("message");
-                                tvName.setText(SharedPrefManager.getInstance(WaiterMoreStatistics.this).getName());
+                                tvItems.setText("Items in the restaurant: " + obj.getString("items"));
+                                tvMembers.setText("Staff members: " + obj.getString("members"));
+                                tvOrders.setText("Orders in total: " + obj.getString("orders"));
+                                tvRevenue.setText("Revenue: "+ obj.getString("profit"));
 
-                                tvHours.setText("Worked hours: " + obj.getString("working_hours"));
-                                tvOrders.setText("Completed orders: " + obj.getString("orders"));
-                                tvShifts.setText("Shifts: " + obj.getString("shifts"));
+
 
                             }
                             else {
-                                Toast.makeText(WaiterMoreStatistics.this, obj.getString("message"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(ManagerMoreStatisticsActivity.this, obj.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -63,14 +65,15 @@ public class WaiterMoreStatistics extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(WaiterMoreStatistics.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(ManagerMoreStatisticsActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
         ){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("userId", Integer.toString(SharedPrefManager.getInstance(WaiterMoreStatistics.this).getUserId()));
+                params.put("restaurantId", Integer.toString(User.getInstance(ManagerMoreStatisticsActivity.this).getUserRestaurantId()));
+                params.put("token", FirebaseInstanceId.getInstance().getToken());
                 return params;
             }
         };
@@ -78,5 +81,4 @@ public class WaiterMoreStatistics extends AppCompatActivity {
 
 
     }
-
 }

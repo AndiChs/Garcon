@@ -1,8 +1,6 @@
 package es.otherperspectiv.myapplication;
 
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +17,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,7 +90,8 @@ public class WaiterHomeFragment extends Fragment{
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("userId", Integer.toString(SharedPrefManager.getInstance(getContext()).getUserId()));
+                params.put("userId", Integer.toString(User.getInstance(getContext()).getUserId()));
+                params.put("token", FirebaseInstanceId.getInstance().getToken());
                 return params;
             }
         };
@@ -104,7 +104,7 @@ public class WaiterHomeFragment extends Fragment{
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {
                 i1++;
-                tvInfoCalendar.setText("You are not working this day.");
+                tvInfoCalendar.setText("There is no shift for this day.");
                 for(Shift shift : shifts){
                     String x = String.format("%d-%s-%s", i, i1 < 10 ? "0" + Integer.toString(i1) : Integer.toString(i1), i2 < 10 ? "0" + Integer.toString(i2) : Integer.toString(i2));
                     if(shift.getDateStart().contains(x)){

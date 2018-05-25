@@ -19,6 +19,10 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,11 +45,27 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(ShiftAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ShiftAdapter.ViewHolder holder, final int position) {
         final Shift shift = shiftList.get(position);
+        Date date = new Date();
 
-        holder.tvShiftUsername.setText("Name: " + shift.getUsername());
-        holder.tvShiftDate.setText("Date: " + shift.getDateStart() + " | Working hours: " + shift.getWorkingHours());
+        holder.tvShiftUsername.setText(shift.getUsername());
+        holder.tvShiftDate.setText( shift.getDateStart() + " | Hours: " + shift.getWorkingHours());
+
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date dateShift = formatter.parse(shift.getDateStart());
+            if(date.before(dateShift)){
+                holder.btnDelete.setVisibility(View.VISIBLE);
+            }
+            else{
+                holder.btnDelete.setVisibility(View.INVISIBLE);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //if(date.compareTo(shift.getDateStart()) )
 
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +82,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder>{
                                     JSONObject obj = new JSONObject(response);
                                     if(!obj.getBoolean("error")){
                                         Toast.makeText(context, "The shift has been deleted.", Toast.LENGTH_SHORT).show();
+                                        removeShift(position);
                                     }
                                     else {
                                         Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show();
@@ -92,6 +113,12 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder>{
 
             }
         });
+    }
+
+    public void removeShift(int position) {
+        shiftList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, shiftList.size());
     }
 
     @Override

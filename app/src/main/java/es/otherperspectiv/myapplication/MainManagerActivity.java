@@ -16,7 +16,7 @@ public class MainManagerActivity extends AppCompatActivity {
     private WaiterNotificationFragment waiterNotificationFragment = new WaiterNotificationFragment();
     private ManagerItemsFragment managerItemsFragment = new ManagerItemsFragment();
     private WaiterOrdersFragment waiterOrdersFragment = new WaiterOrdersFragment();
-    private WaiterMoreFragment waiterMoreFragment = new WaiterMoreFragment();
+    private ManagerMoreFragment ManagerMoreFragment = new ManagerMoreFragment();
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -35,7 +35,7 @@ public class MainManagerActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_more:
-                    setFragment(waiterMoreFragment);
+                    setFragment(ManagerMoreFragment);
                     return true;
 
                 case R.id.navigation_add_order:
@@ -56,9 +56,10 @@ public class MainManagerActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
     }
 
-    private void setFragment(Fragment fragment) {
+    public void setFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
         fragmentTransaction.replace(R.id.container, fragment);

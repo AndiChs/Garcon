@@ -1,5 +1,6 @@
 package es.otherperspectiv.myapplication;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +13,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
@@ -21,38 +21,41 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JoinRestaurantActivity extends AppCompatActivity {
-    EditText editTextCVR;
-    Button buttonSendRequest;
-
+public class ManagerAddItemActivity extends AppCompatActivity {
+    private EditText etItemName;
+    private EditText etItemDescription;
+    private EditText etItemPrice;
+    private Button btnAddItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_join_restaurant);
+        setContentView(R.layout.activity_manager_add_item);
 
-        editTextCVR = findViewById(R.id.editTextCVR);
-        buttonSendRequest = findViewById(R.id.buttonSendRequest);
+        etItemName = findViewById(R.id.etItemName);
+        etItemDescription = findViewById(R.id.etItemDescription);
+        etItemPrice = findViewById(R.id.etItemPrice);
+        btnAddItem = findViewById(R.id.btnAcceptRequest);
 
-
-        buttonSendRequest.setOnClickListener(new View.OnClickListener() {
+        btnAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String restaurantId = editTextCVR.getText().toString().trim();
-                final String userId = String.valueOf(User.getInstance(getApplicationContext()).getUserId());
-
                 StringRequest stringRequest = new StringRequest(
                         Request.Method.POST,
-                        Constants.URL_JOIN_RESTAURANT,
+                        Constants.URL_ADD_ITEM,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 try {
                                     JSONObject obj = new JSONObject(response);
                                     if(!obj.getBoolean("error")){
-                                        Toast.makeText(getApplicationContext(), "Request created successfully.", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(ManagerAddItemActivity.this, "The item has been added.", Toast.LENGTH_SHORT).show();
 
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                                        Intent intent = new Intent(ManagerAddItemActivity.this, MainManagerActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                    }
+                                    else {
+                                        Toast.makeText(ManagerAddItemActivity.this, obj.getString("message"), Toast.LENGTH_LONG).show();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -68,16 +71,19 @@ public class JoinRestaurantActivity extends AppCompatActivity {
                 ){
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
-                        HashMap<String, String> params = new HashMap<>();
-                        params.put("restaurantId", restaurantId);
-                        params.put("userId", userId);
+                        Map<String, String> params = new HashMap<>();
+                        params.put("restaurantId", Integer.toString(User.getInstance(ManagerAddItemActivity.this).getUserRestaurantId()));
+                        params.put("price", etItemPrice.getText().toString().trim());
+                        params.put("name", etItemName.getText().toString().trim());
+                        params.put("description", etItemDescription.getText().toString().trim());
                         params.put("token", FirebaseInstanceId.getInstance().getToken());
                         return params;
                     }
                 };
 
-                RequestHandler.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+                RequestHandler.getInstance(ManagerAddItemActivity.this).addToRequestQueue(stringRequest);
             }
         });
+
     }
 }

@@ -18,6 +18,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,7 +56,7 @@ public class ManagerItemsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         recyclerView = (RecyclerView) view.findViewById(R.id.rvItems);
-        btnAddItem = (Button) view.findViewById(R.id.btnAddItem);
+        btnAddItem = (Button) view.findViewById(R.id.btnAcceptRequest);
 
 
         recyclerView.setHasFixedSize(true);
@@ -99,7 +100,8 @@ public class ManagerItemsFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("restaurantId", Integer.toString(SharedPrefManager.getInstance(getContext()).getUserRestaurantId()));
+                params.put("restaurantId", Integer.toString(User.getInstance(getContext()).getUserRestaurantId()));
+                params.put("token", FirebaseInstanceId.getInstance().getToken());
                 return params;
             }
         };
@@ -109,7 +111,7 @@ public class ManagerItemsFragment extends Fragment {
         btnAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext(), WaiterProcessOrder.class));
+                startActivity(new Intent(getContext(), ManagerAddItemActivity.class));
             }
         });
 

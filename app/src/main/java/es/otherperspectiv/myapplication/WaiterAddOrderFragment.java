@@ -18,6 +18,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,7 +102,8 @@ public class WaiterAddOrderFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("restaurantId", Integer.toString(SharedPrefManager.getInstance(getContext()).getUserRestaurantId()));
+                params.put("restaurantId", Integer.toString(User.getInstance(getContext()).getUserRestaurantId()));
+                params.put("token", FirebaseInstanceId.getInstance().getToken());
                 return params;
             }
         };
@@ -113,7 +115,7 @@ public class WaiterAddOrderFragment extends Fragment {
         btnDeleteOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPrefManager.getInstance(getContext()).deleteOrders();
+                User.getInstance(getContext()).deleteOrders();
                 Toast.makeText(getContext(), "You deleted all the items from the basket.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -121,7 +123,7 @@ public class WaiterAddOrderFragment extends Fragment {
         btnNextOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext(), WaiterProcessOrder.class));
+                startActivity(new Intent(getContext(), WaiterProcessOrderActivity.class));
             }
         });
 

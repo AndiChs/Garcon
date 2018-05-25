@@ -234,7 +234,7 @@
 		}
 
 		public function getRestaurantShifts($restaurantId){
-			$stmt = $this->con->prepare("SELECT date_start, working_hours, name FROM user_shifts, users WHERE user_shifts.user_id = users.id AND users.restaurant_id = ?");
+			$stmt = $this->con->prepare("SELECT date_start, working_hours, name FROM user_shifts, users WHERE user_shifts.user_id = users.id AND users.restaurant_id = ? ORDER BY date_start DESC");
 			$stmt->bind_param("i", $restaurantId);
 			$stmt->execute();
 			$stmt->store_result();
@@ -275,5 +275,140 @@
 			return 1;
 		}
 
+		public function addRestaurantItem($restaurantId, $price, $name, $description){
+			$stmt = $this->con->prepare("INSERT INTO items (restaurant_id, price, name, description) VALUES (?, ?, ?, ?)");
+			$stmt->bind_param("iiss", $restaurantId, $price, $name, $description);
+			return $stmt->execute();
+		}
+
+		public function getRestaurantStatistics($restaurantId){
+			$return_array = array();
+
+			// Query for getting the number of the orderes completed by a user
+			$stmt = $this->con->prepare("SELECT COUNT(id) AS rows FROM orders WHERE restaurant_id = ?");
+			$stmt->bind_param("i", $restaurantId);
+			$stmt->execute();
+			$row = $stmt->get_result()->fetch_assoc();
+
+			$return_array['orders'] = $row['rows'];
+
+			// Query for getting the profit
+			$stmt = $this->con->prepare("SELECT COALESCE(SUM(price), 0) AS profit FROM orders WHERE restaurant_id = ?");
+			$stmt->bind_param("i", $restaurantId);
+			$stmt->execute();
+			$row = $stmt->get_result()->fetch_assoc();
+
+			$return_array['profit'] = $row['profit'];
+
+			// Query for getting the number of shifts
+			$stmt = $this->con->prepare("SELECT COUNT(id) AS rows FROM users WHERE restaurant_id = ?");
+			$stmt->bind_param("i", $userId);
+			$stmt->execute();
+			$row = $stmt->get_result()->fetch_assoc();
+
+			$return_array['members'] = $row['rows'];
+
+			// Query for getting the number of items
+			$stmt = $this->con->prepare("SELECT COUNT(id) AS rows FROM items WHERE restaurant_id = ?");
+			$stmt->bind_param("i", $restaurantId);
+			$stmt->execute();
+			$row = $stmt->get_result()->fetch_assoc();
+
+			$return_array['items'] = $row['rows'];
+
+
+
+			return $return_array;
+		}
+
+		public function acceptUserRequest($name, $restaurantId){
+			$user = $this->getUser($name);
+
+			if($this->checkIfRestaurantRequestExists($user['id'], $restaurantId)){
+
+				$stmt = $this->con->prepare("UPDATE users SET restaurant_id = ? WHERE username = ? LIMIT 1");
+				$stmt->bind_param("is", $restaurantId, $name);
+				$stmt->execute();
+
+				$stmt = $this->con->prepare("DELETE FROM restaurant_requests WHERE user_id = ?");
+				$stmt->bind_param("i", $user['id']);
+				$stmt->execute();
+				return 1;
+			}
+
+			return 0;
+		}
+
+		public function addShift($userId, $dateStart, $workingHours){
+			$stmt = $this->con->prepare("INSERT INTO user_shifts (user_id, date_start, working_hours) VALUES (?, ?, ?)");
+			$stmt->bind_param("isi", $userId, $dateStart, $workingHours);
+			return $stmt->execute();
+		}
+
+		public function userUpdateToken($username, $token){
+			$stmt = $this->con->prepare("UPDATE users SET token = ? WHERE username = ? LIMIT 1");
+			$stmt->bind_param("ss", $token, $username);
+			return $stmt->execute();
+		}
+
+		public function sendNotification($tokens, $message)
+		{
+			$url = 'https://fcm.googleapis.com/fcm/send';
+			$fields = array(
+				 'registration_ids' => $tokens,
+				 'data' => $message
+				);
+			$headers = array(
+				'Authorization:key = AIzaSyAySflDXk98Ss7MzWKplwP6Bf4wufElxqU',
+				'Content-Type: application/json'
+				);
+		   $ch = curl_init();
+	       curl_setopt($ch, CURLOPT_URL, $url);
+	       curl_setopt($ch, CURLOPT_POST, true);
+	       curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	       curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);  
+	       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	       curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+	       $result = curl_exec($ch);           
+	       if ($result === FALSE) {
+	           die('Curl failed: ' . curl_error($ch));
+	       }
+	       curl_close($ch);
+	       return $result;
+		}
+
+		public function userGetNotifications($userId){
+			$stmt = $this->con->prepare("SELECT description, createdAt FROM notifications WHERE user_id = ? ORDER BY createdAt DESC");
+			$stmt->bind_param("i", $userId);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->bind_result($description, $createdAt);
+
+			$return_array = array();
+
+
+			while ( $row = $stmt->fetch() ) {
+			    $row_array["description"] = $description;
+			    $row_array["createdAt"] = $createdAt;
+
+			    array_push($return_array, $row_array);
+			}
+			return $return_array;
+		}
+
+		public function checkToken($token){
+			$stmt = $this->con->prepare("SELECT id FROM users WHERE token = ? LIMIT 1");
+			$stmt->bind_param("s", $token);
+			$stmt->execute();
+			$stmt->store_result();
+			return $stmt->num_rows > 0;
+		}
+
+		public function setUserAsManager($userId, $restaurantId){
+			$stmt = $this->con->prepare("UPDATE users SET restaurant_manager = 1, restaurant_id = ? WHERE id = ? LIMIT 1");
+			$stmt->bind_param("ii", $restaurantId, $userId);
+			return $stmt->execute();
+		}
 		
 	}

@@ -13,6 +13,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +21,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WaiterMoreEditProfile extends AppCompatActivity {
+public class WaiterMoreEditProfileActivity extends AppCompatActivity {
     private Button btnApply;
     private EditText etName;
     private EditText etEmailAddress;
@@ -38,8 +39,8 @@ public class WaiterMoreEditProfile extends AppCompatActivity {
         etCurrentPassword = findViewById(R.id.etCurrentPassword);
         etNewPassword = findViewById(R.id.etNewPassword);
 
-        etName.setText(SharedPrefManager.getInstance(this).getName());
-        etEmailAddress.setText(SharedPrefManager.getInstance(this).getUsername());
+        etName.setText(User.getInstance(this).getName());
+        etEmailAddress.setText(User.getInstance(this).getUsername());
 
         btnApply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,12 +75,12 @@ public class WaiterMoreEditProfile extends AppCompatActivity {
                                 try {
                                     JSONObject obj = new JSONObject(response);
                                     if(!obj.getBoolean("error")){
-                                        Toast.makeText(WaiterMoreEditProfile.this, "Your information has been updated.", Toast.LENGTH_SHORT).show();
-                                        SharedPrefManager.getInstance(WaiterMoreEditProfile.this).setName(etName.getText().toString().trim());
-                                        SharedPrefManager.getInstance(WaiterMoreEditProfile.this).setUsername(etEmailAddress.getText().toString().trim());
+                                        Toast.makeText(WaiterMoreEditProfileActivity.this, "Your information has been updated.", Toast.LENGTH_SHORT).show();
+                                        User.getInstance(WaiterMoreEditProfileActivity.this).setName(etName.getText().toString().trim());
+                                        User.getInstance(WaiterMoreEditProfileActivity.this).setUsername(etEmailAddress.getText().toString().trim());
                                     }
                                     else {
-                                        Toast.makeText(WaiterMoreEditProfile.this, obj.getString("message"), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(WaiterMoreEditProfileActivity.this, obj.getString("message"), Toast.LENGTH_LONG).show();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -89,23 +90,24 @@ public class WaiterMoreEditProfile extends AppCompatActivity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(WaiterMoreEditProfile.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(WaiterMoreEditProfileActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }
                 ){
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
-                        params.put("userId", Integer.toString(SharedPrefManager.getInstance(WaiterMoreEditProfile.this).getUserId()));
+                        params.put("userId", Integer.toString(User.getInstance(WaiterMoreEditProfileActivity.this).getUserId()));
                         params.put("name", etName.getText().toString().trim());
                         params.put("newPassword", etNewPassword.getText().toString().trim());
                         params.put("password", etCurrentPassword.getText().toString().trim());
                         params.put("newUsername", etEmailAddress.getText().toString().trim());
-                        params.put("username", SharedPrefManager.getInstance(WaiterMoreEditProfile.this).getUsername());
+                        params.put("username", User.getInstance(WaiterMoreEditProfileActivity.this).getUsername());
+                        params.put("token", FirebaseInstanceId.getInstance().getToken());
                         return params;
                     }
                 };
-                RequestHandler.getInstance(WaiterMoreEditProfile.this).addToRequestQueue(stringRequest);
+                RequestHandler.getInstance(WaiterMoreEditProfileActivity.this).addToRequestQueue(stringRequest);
             }
         });
 

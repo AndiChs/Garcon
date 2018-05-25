@@ -2,6 +2,7 @@
 
 require_once '../includes/DbOperations.php';
 
+
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
 	if(isset($_POST['cvr']) && 
 		isset($_POST['address']) && 
@@ -12,6 +13,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 			$restaurant = $db->getRestaurantByCvr($_POST['cvr']);
 			$response['error'] = false;
 			$response['restaurantId'] = $restaurant['id'];
+			$db->setUserAsManager($_POST['userId'], $restaurant['id']);
 		} else{
 			$response['error'] = true;
 			$response['message'] = "It seems this CVR number is already used.";

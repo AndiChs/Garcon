@@ -26,12 +26,32 @@
         <activity
             android:name=".MainWaiterActivity"
             android:label="@string/title_activity_main_waiter" />
-        <activity android:name=".WaiterMoreStatistics" />
-        <activity android:name=".WaiterMoreEditProfile" />
+        <activity android:name=".WaiterMoreStatisticsActivity" />
+        <activity android:name=".WaiterMoreEditProfileActivity" />
         <activity
             android:name=".MainManagerActivity"
             android:label="@string/title_activity_main_manager" />
-        <activity android:name=".WaiterProcessOrder"></activity>
+        <activity android:name=".WaiterProcessOrderActivity" />
+        <activity android:name=".ManagerAddItemActivity" />
+        <activity android:name=".ManagerMoreStatisticsActivity" />
+        <activity android:name=".ManagerMoreAddShiftActivity" />
+        <activity android:name=".ManagerMoreRequest"/>
+
+        <service
+            android:name=".FirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+
+        <service
+            android:name=".FirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

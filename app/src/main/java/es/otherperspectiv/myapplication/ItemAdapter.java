@@ -33,15 +33,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Item item = itemList.get(position);
 
-        holder.tvItemDescription.setText(item.getDescription());
+        holder.tvItemDescription.setText(item.getDescription() + " - Price: " + item.getPrice());
         holder.tvItemName.setText(item.getName());
 
         holder.btnAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPrefManager.getInstance(view.getContext()).addItemToOrder(item.getName(), item.getPrice());
-                System.out.println(SharedPrefManager.getInstance(view.getContext()).getOrderPrice());
-
+                User.getInstance(view.getContext()).addItemToOrder(item.getName(), item.getPrice());
+                Toast.makeText(context, "You added " + item.getName() + " to the basket.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -62,7 +61,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
 
             tvItemName = (TextView) itemView.findViewById(R.id.tvItemName);
             tvItemDescription = (TextView) itemView.findViewById(R.id.tvItemDescription);
-            btnAddItem = (Button) itemView.findViewById(R.id.btnAddItem);
+            btnAddItem = (Button) itemView.findViewById(R.id.btnAcceptRequest);
         }
     }
 }

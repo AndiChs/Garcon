@@ -14,6 +14,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +22,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WaiterProcessOrder extends AppCompatActivity {
+public class WaiterProcessOrderActivity extends AppCompatActivity {
 
     private TextView tvBillDescription;
     private TextView tvBillPrice;
@@ -38,15 +39,15 @@ public class WaiterProcessOrder extends AppCompatActivity {
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
         etTable = (EditText) findViewById(R.id.etTable);
 
-        tvBillDescription.setText(SharedPrefManager.getInstance(WaiterProcessOrder.this).getOrderDescription());
-        tvBillPrice.setText("Order Price: " + Integer.toString(SharedPrefManager.getInstance(WaiterProcessOrder.this).getOrderPrice()));
+        tvBillDescription.setText(User.getInstance(WaiterProcessOrderActivity.this).getOrderDescription());
+        tvBillPrice.setText("Order Price: " + Integer.toString(User.getInstance(WaiterProcessOrderActivity.this).getOrderPrice()));
 
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(SharedPrefManager.getInstance(WaiterProcessOrder.this).getOrderPrice() == 0){
-                    Toast.makeText(WaiterProcessOrder.this, "Your basket is empty.", Toast.LENGTH_SHORT).show();
+                if(User.getInstance(WaiterProcessOrderActivity.this).getOrderPrice() < 1){
+                    Toast.makeText(WaiterProcessOrderActivity.this, "Your basket is empty.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 StringRequest stringRequest = new StringRequest(
@@ -58,14 +59,14 @@ public class WaiterProcessOrder extends AppCompatActivity {
                                 try {
                                     JSONObject obj = new JSONObject(response);
                                     if(!obj.getBoolean("error")){
-                                        Toast.makeText(WaiterProcessOrder.this, "The order has been added..", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(WaiterProcessOrder.this, MainWaiterActivity.class);
+                                        Toast.makeText(WaiterProcessOrderActivity.this, "The order has been added..", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(WaiterProcessOrderActivity.this, MainWaiterActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
-                                        SharedPrefManager.getInstance(WaiterProcessOrder.this).deleteOrders();
+                                        User.getInstance(WaiterProcessOrderActivity.this).deleteOrders();
                                     }
                                     else {
-                                        Toast.makeText(WaiterProcessOrder.this, obj.getString("message"), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(WaiterProcessOrderActivity.this, obj.getString("message"), Toast.LENGTH_LONG).show();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -82,16 +83,17 @@ public class WaiterProcessOrder extends AppCompatActivity {
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
-                        params.put("userId", Integer.toString(SharedPrefManager.getInstance(WaiterProcessOrder.this).getUserId()));
-                        params.put("restaurantId", Integer.toString(SharedPrefManager.getInstance(WaiterProcessOrder.this).getUserRestaurantId()));
+                        params.put("userId", Integer.toString(User.getInstance(WaiterProcessOrderActivity.this).getUserId()));
+                        params.put("restaurantId", Integer.toString(User.getInstance(WaiterProcessOrderActivity.this).getUserRestaurantId()));
                         params.put("tableId", etTable.getText().toString().trim());
-                        params.put("orderDescription", SharedPrefManager.getInstance(WaiterProcessOrder.this).getOrderDescription());
-                        params.put("orderPrice", Integer.toString(SharedPrefManager.getInstance(WaiterProcessOrder.this).getOrderPrice()));
+                        params.put("orderDescription", User.getInstance(WaiterProcessOrderActivity.this).getOrderDescription());
+                        params.put("orderPrice", Integer.toString(User.getInstance(WaiterProcessOrderActivity.this).getOrderPrice()));
+                        params.put("token", FirebaseInstanceId.getInstance().getToken());
                         return params;
                     }
                 };
 
-                RequestHandler.getInstance(WaiterProcessOrder.this).addToRequestQueue(stringRequest);
+                RequestHandler.getInstance(WaiterProcessOrderActivity.this).addToRequestQueue(stringRequest);
 
             }
         });

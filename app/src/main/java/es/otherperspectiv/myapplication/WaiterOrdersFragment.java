@@ -16,6 +16,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -93,7 +94,8 @@ public class WaiterOrdersFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("restaurantId", Integer.toString(SharedPrefManager.getInstance(getContext()).getUserRestaurantId()));
+                params.put("restaurantId", Integer.toString(User.getInstance(getContext()).getUserRestaurantId()));
+                params.put("token", FirebaseInstanceId.getInstance().getToken());
                 return params;
             }
         };

@@ -8,6 +8,54 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:882485716924:android:bf8baa67b4e9ef79",
+        "android_client_info": {
+          "package_name": "es.otherperspectiv.calculator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "882485716924-slup7phmrg8rbrjeh2v5plbcgtn7qf4b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "es.otherperspectiv.calculator",
+            "certificate_hash": "5959386af906242ed61f2ccc98963317f0eb35ce"
+          }
+        },
+        {
+          "client_id": "882485716924-vkgloedqh5903u4qskeuo7bgu721787s.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "882485716924-vkgloedqh5903u4qskeuo7bgu721787s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDviUag5xSu005XfiOlR4j_Sf1MkplFZSc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "882485716924-vkgloedqh5903u4qskeuo7bgu721787s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:882485716924:android:eb5b79dd5c42bcf8",
         "android_client_info": {
           "package_name": "es.otherperspectiv.myapplication"
@@ -21,6 +69,10 @@
             "package_name": "es.otherperspectiv.myapplication",
             "certificate_hash": "5959386af906242ed61f2ccc98963317f0eb35ce"
           }
+        },
+        {
+          "client_id": "882485716924-vkgloedqh5903u4qskeuo7bgu721787s.apps.googleusercontent.com",
+          "client_type": 3
         },
         {
           "client_id": "882485716924-vkgloedqh5903u4qskeuo7bgu721787s.apps.googleusercontent.com",

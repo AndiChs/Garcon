@@ -84,28 +84,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
         progressDialog.setMessage("Registering account...");
         progressDialog.show();
-//        mAuth.createUserWithEmailAndPassword(emailAddress, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//            @Override
-//            public void onComplete(@NonNull Task<AuthResult> task) {
-//                if(task.isSuccessful()){
-//                    Toast.makeText(SignUpActivity.this, "User Registered Successful", Toast.LENGTH_SHORT).show();
-//                    User user = new User(emailAddress, password);
-//
-//                    user.setName(name);
-//
-//                    FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance()
-//                            .getCurrentUser().getUid())
-//                            .setValue(user);
-//
-//                    startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
-//                }
-//                else{
-//                    if(task.getException() instanceof FirebaseAuthUserCollisionException){
-//                        Toast.makeText(SignUpActivity.this, "This email is already used.", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            }
-//        });
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST,

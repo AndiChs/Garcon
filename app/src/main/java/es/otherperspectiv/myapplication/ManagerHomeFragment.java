@@ -99,7 +99,7 @@ public class ManagerHomeFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("restaurantId", Integer.toString(SharedPrefManager.getInstance(getContext()).getUserRestaurantId()));
+                params.put("restaurantId", Integer.toString(User.getInstance(getContext()).getUserRestaurantId()));
                 return params;
             }
         };

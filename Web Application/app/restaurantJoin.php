@@ -1,6 +1,7 @@
 <?php
 
 require_once '../includes/DbOperations.php';
+require_once '../includes/Auth.php';
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
 	if(isset($_POST['restaurantId']) && 

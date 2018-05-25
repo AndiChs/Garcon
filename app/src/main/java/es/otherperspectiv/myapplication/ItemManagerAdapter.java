@@ -1,7 +1,6 @@
 package es.otherperspectiv.myapplication;
 
 import android.content.Context;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,12 +44,13 @@ public class ItemManagerAdapter extends RecyclerView.Adapter<ItemManagerAdapter.
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final Item item = itemList.get(position);
 
-        holder.tvItemDescription.setText(item.getDescription());
+        holder.tvItemDescription.setText(item.getDescription() + "- Price: " + item.getPrice());
         holder.tvItemName.setText(item.getName());
 
         holder.btnDeleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
 
                 StringRequest stringRequest = new StringRequest(
                         Request.Method.POST,
@@ -62,7 +62,7 @@ public class ItemManagerAdapter extends RecyclerView.Adapter<ItemManagerAdapter.
                                     JSONObject obj = new JSONObject(response);
                                     if(!obj.getBoolean("error")){
                                         Toast.makeText(context, "The item has been deleted.", Toast.LENGTH_SHORT).show();
-
+                                        removeItem(position);
                                     }
                                     else {
                                         Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show();
@@ -84,7 +84,7 @@ public class ItemManagerAdapter extends RecyclerView.Adapter<ItemManagerAdapter.
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
                         params.put("name", item.getName());
-                        params.put("restaurantId", Integer.toString(SharedPrefManager.getInstance(context).getUserRestaurantId()));
+                        params.put("restaurantId", Integer.toString(User.getInstance(context).getUserRestaurantId()));
                         return params;
                     }
                 };
@@ -93,6 +93,12 @@ public class ItemManagerAdapter extends RecyclerView.Adapter<ItemManagerAdapter.
 
             }
         });
+    }
+
+    public void removeItem(int position) {
+        itemList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, itemList.size());
     }
 
     @Override

@@ -10,7 +10,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 		$token = $db->getRestaurantMembers($_POST['restaurantId'], $_POST['message']);
 		$message = array("message" => $_POST['message']);
 		$response = $db->sendNotification($token, $message);
-		$db->sendNotificationToAllMembers($_POST['restaurantId'], $_POST['message']);
+		$db->sendNotificationToAllMembers($_POST['message'], $_POST['restaurantId']);
 		
 
 	} else{

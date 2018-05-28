@@ -1,4 +1,4 @@
-package es.otherperspectiv.myapplication;
+package es.otherperspectiv.myapplication.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +21,11 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import es.otherperspectiv.myapplication.utils.Constants;
+import es.otherperspectiv.myapplication.R;
+import es.otherperspectiv.myapplication.utils.RequestHandler;
+import es.otherperspectiv.myapplication.models.User;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 

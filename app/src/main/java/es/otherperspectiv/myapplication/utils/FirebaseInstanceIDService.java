@@ -1,4 +1,4 @@
-package es.otherperspectiv.myapplication;
+package es.otherperspectiv.myapplication.utils;
 
 import android.widget.Toast;
 
@@ -10,11 +10,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import es.otherperspectiv.myapplication.models.User;
 
 
 public class FirebaseInstanceIDService extends FirebaseInstanceIdService {

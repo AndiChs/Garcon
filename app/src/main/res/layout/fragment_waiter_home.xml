@@ -4,7 +4,7 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="es.otherperspectiv.myapplication.WaiterHomeFragment">
+    tools:context="es.otherperspectiv.myapplication.fragments.WaiterHomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <CalendarView

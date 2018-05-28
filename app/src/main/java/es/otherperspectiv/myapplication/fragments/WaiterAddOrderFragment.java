@@ -1,4 +1,4 @@
-package es.otherperspectiv.myapplication;
+package es.otherperspectiv.myapplication.fragments;
 
 
 import android.content.Intent;
@@ -18,7 +18,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,34 +28,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.otherperspectiv.myapplication.utils.Constants;
+import es.otherperspectiv.myapplication.R;
+import es.otherperspectiv.myapplication.utils.RequestHandler;
+import es.otherperspectiv.myapplication.activities.WaiterProcessOrderActivity;
+import es.otherperspectiv.myapplication.adapters.ItemAdapter;
+import es.otherperspectiv.myapplication.models.Item;
+import es.otherperspectiv.myapplication.models.User;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ManagerItemsFragment extends Fragment {
-
+public class WaiterAddOrderFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private Button btnAddItem;
+    private Button btnDeleteOrder;
+    private Button btnNextOrder;
 
     private List<Item> itemList;
 
-    public ManagerItemsFragment() {
+
+    public WaiterAddOrderFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_manager_items, container, false);
+        return inflater.inflate(R.layout.fragment_waiter_add_order, container, false);
     }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         recyclerView = (RecyclerView) view.findViewById(R.id.rvItems);
-        btnAddItem = (Button) view.findViewById(R.id.btnAcceptRequest);
+        btnDeleteOrder = (Button) view.findViewById(R.id.btnDeleteOrder);
+        btnNextOrder = (Button) view.findViewById(R.id.btnNextOrder);
 
 
         recyclerView.setHasFixedSize(true);
@@ -78,7 +87,7 @@ public class ManagerItemsFragment extends Fragment {
                                     itemList.add(new Item(o.getString("name"), o.getString("description"), o.getInt("price")));
                                     System.out.println(o.getString("name"));
                                 }
-                                adapter = new ItemManagerAdapter(itemList, getContext());
+                                adapter = new ItemAdapter(itemList, getContext());
                                 recyclerView.setAdapter(adapter);
                             }
                             else {
@@ -108,14 +117,23 @@ public class ManagerItemsFragment extends Fragment {
 
         RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
 
-        btnAddItem.setOnClickListener(new View.OnClickListener() {
+
+
+        btnDeleteOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext(), ManagerAddItemActivity.class));
+                User.getInstance(getContext()).deleteOrders();
+                Toast.makeText(getContext(), "You deleted all the items from the basket.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnNextOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), WaiterProcessOrderActivity.class));
             }
         });
 
         super.onViewCreated(view, savedInstanceState);
     }
-
 }

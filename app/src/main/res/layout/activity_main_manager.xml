@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="es.otherperspectiv.myapplication.MainManagerActivity"
+    tools:context="es.otherperspectiv.myapplication.activities.MainManagerActivity"
     android:background="@drawable/my_gradient_drawable">
 
     <TextView

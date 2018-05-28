@@ -11,44 +11,44 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity">
+        <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUpActivity" />
+        <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".LogInActivity" />
-        <activity android:name=".CreateOrJoinRestaurantActivity" />
-        <activity android:name=".CreateRestaurantActivity" />
-        <activity android:name=".JoinRestaurantActivity" />
+        <activity android:name=".activities.CreateOrJoinRestaurantActivity" />
+        <activity android:name=".activities.CreateRestaurantActivity" />
+        <activity android:name=".activities.JoinRestaurantActivity" />
         <activity
-            android:name=".MainWaiterActivity"
+            android:name=".activities.MainWaiterActivity"
             android:label="@string/title_activity_main_waiter" />
-        <activity android:name=".WaiterMoreStatisticsActivity" />
-        <activity android:name=".WaiterMoreEditProfileActivity" />
+        <activity android:name=".activities.WaiterMoreStatisticsActivity" />
+        <activity android:name=".activities.WaiterMoreEditProfileActivity" />
         <activity
-            android:name=".MainManagerActivity"
+            android:name=".activities.MainManagerActivity"
             android:label="@string/title_activity_main_manager" />
-        <activity android:name=".WaiterProcessOrderActivity" />
-        <activity android:name=".ManagerAddItemActivity" />
-        <activity android:name=".ManagerMoreStatisticsActivity" />
-        <activity android:name=".ManagerMoreAddShiftActivity" />
-        <activity android:name=".ManagerMoreRequest" />
+        <activity android:name=".activities.WaiterProcessOrderActivity" />
+        <activity android:name=".activities.ManagerAddItemActivity" />
+        <activity android:name=".activities.ManagerMoreStatisticsActivity" />
+        <activity android:name=".activities.ManagerMoreAddShiftActivity" />
+        <activity android:name=".activities.ManagerMoreRequestActivity" />
 
-        <service android:name=".FirebaseMessagingService">
+        <service android:name=".utils.FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".FirebaseInstanceIDService">
+        <service android:name=".utils.FirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name=".ManagerMoreSendNotificationActivity"></activity>
+        <activity android:name=".activities.ManagerMoreSendNotificationActivity"></activity>
     </application>
 
 </manifest>

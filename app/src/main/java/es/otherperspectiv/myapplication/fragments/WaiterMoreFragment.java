@@ -1,4 +1,4 @@
-package es.otherperspectiv.myapplication;
+package es.otherperspectiv.myapplication.fragments;
 
 
 import android.content.Intent;
@@ -10,6 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import es.otherperspectiv.myapplication.R;
+import es.otherperspectiv.myapplication.activities.LoginActivity;
+import es.otherperspectiv.myapplication.activities.WaiterMoreEditProfileActivity;
+import es.otherperspectiv.myapplication.activities.WaiterMoreStatisticsActivity;
+import es.otherperspectiv.myapplication.models.User;
 
 
 /**

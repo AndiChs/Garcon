@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/my_gradient_drawable"
-    tools:context=".ManagerMoreSendNotificationActivity">
+    tools:context=".activities.ManagerMoreSendNotificationActivity">
 
     <ImageView
         android:id="@+id/imageView14"
@@ -42,7 +42,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@color/colorAccent"
-        android:text="Button"
+        android:text="Send Notification"
         android:textColor="@color/cardview_light_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,14 +1,15 @@
-package es.otherperspectiv.myapplication;
+package es.otherperspectiv.myapplication.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -16,7 +17,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,21 +24,25 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import es.otherperspectiv.myapplication.utils.Constants;
+import es.otherperspectiv.myapplication.R;
+import es.otherperspectiv.myapplication.utils.RequestHandler;
+import es.otherperspectiv.myapplication.models.Shift;
+import es.otherperspectiv.myapplication.models.User;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WaiterOrdersFragment extends Fragment {
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+public class WaiterHomeFragment extends Fragment{
 
-    private List<Order> orderList;
+    private CalendarView calendarView;
+    private ArrayList<Shift> shifts = new ArrayList<>();
+    private TextView tvInfoCalendar;
 
-
-    public WaiterOrdersFragment() {
+    public WaiterHomeFragment() {
         // Required empty public constructor
     }
 
@@ -46,20 +50,19 @@ public class WaiterOrdersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_waiter_orders, container, false);
+        return inflater.inflate(R.layout.fragment_waiter_home, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.rvOrders);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        calendarView = (CalendarView) view.findViewById(R.id.viewCalendar);
+        tvInfoCalendar = (TextView) view.findViewById(R.id.tvInfoCalendar);
 
-        orderList = new ArrayList<>();
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
-                Constants.URL_GET_ORDERS,
+                Constants.URL_WAITER_SHIFTS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -69,11 +72,9 @@ public class WaiterOrdersFragment extends Fragment {
                                 JSONArray jsonArray = obj.getJSONArray("message");
                                 for(int i = 0; i < jsonArray.length(); i++){
                                     JSONObject o = jsonArray.getJSONObject(i);
-                                    orderList.add(new Order(o.getString("price"), o.getString("description"), o.getString("ready_at"), o.getString("id"), o.getString("table_id")));
-
+                                    shifts.add(new Shift(o.getString("date_start"), o.getInt("working_hours")));
+                                    System.out.println(o.get("date_start"));
                                 }
-                                adapter = new OrderAdapter(orderList, getContext());
-                                recyclerView.setAdapter(adapter);
                             }
                             else {
                                 Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
@@ -94,7 +95,7 @@ public class WaiterOrdersFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("restaurantId", Integer.toString(User.getInstance(getContext()).getUserRestaurantId()));
+                params.put("userId", Integer.toString(User.getInstance(getContext()).getUserId()));
                 params.put("token", User.getInstance(getContext()).getToken());
                 return params;
             }
@@ -102,6 +103,23 @@ public class WaiterOrdersFragment extends Fragment {
 
         RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
 
+
+
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {
+                i1++;
+                tvInfoCalendar.setText("There is no shift for this day.");
+                for(Shift shift : shifts){
+                    String x = String.format("%d-%s-%s", i, i1 < 10 ? "0" + Integer.toString(i1) : Integer.toString(i1), i2 < 10 ? "0" + Integer.toString(i2) : Integer.toString(i2));
+                    if(shift.getDateStart().contains(x)){
+                        tvInfoCalendar.setText(shift.getDateStart() + "- Working Hours " + shift.getWorkingHours());
+                        break;
+                    }
+
+                }
+            }
+        });
         super.onViewCreated(view, savedInstanceState);
     }
 }

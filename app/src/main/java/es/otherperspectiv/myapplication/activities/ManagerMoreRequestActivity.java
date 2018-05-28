@@ -1,4 +1,4 @@
-package es.otherperspectiv.myapplication;
+package es.otherperspectiv.myapplication.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,7 +12,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +19,12 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ManagerMoreRequest extends AppCompatActivity {
+import es.otherperspectiv.myapplication.utils.Constants;
+import es.otherperspectiv.myapplication.R;
+import es.otherperspectiv.myapplication.utils.RequestHandler;
+import es.otherperspectiv.myapplication.models.User;
+
+public class ManagerMoreRequestActivity extends AppCompatActivity {
     private Button btnAcceptRequest;
     private EditText etEmail;
 
@@ -43,7 +47,7 @@ public class ManagerMoreRequest extends AppCompatActivity {
                             public void onResponse(String response) {
                                 try {
                                     JSONObject obj = new JSONObject(response);
-                                    Toast.makeText(ManagerMoreRequest.this, obj.getString("message"), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ManagerMoreRequestActivity.this, obj.getString("message"), Toast.LENGTH_LONG).show();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -60,12 +64,12 @@ public class ManagerMoreRequest extends AppCompatActivity {
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
                         params.put("name", etEmail.getText().toString());
-                        params.put("restaurantId", Integer.toString(User.getInstance(ManagerMoreRequest.this).getUserRestaurantId()));
+                        params.put("restaurantId", Integer.toString(User.getInstance(ManagerMoreRequestActivity.this).getUserRestaurantId()));
                         params.put("token", User.getInstance(getApplicationContext()).getToken());
                         return params;
                     }
                 };
-                RequestHandler.getInstance(ManagerMoreRequest.this).addToRequestQueue(stringRequest);
+                RequestHandler.getInstance(ManagerMoreRequestActivity.this).addToRequestQueue(stringRequest);
             }
         });
 

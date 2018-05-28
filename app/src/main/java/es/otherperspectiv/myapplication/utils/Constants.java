@@ -1,8 +1,5 @@
-package es.otherperspectiv.myapplication;
+package es.otherperspectiv.myapplication.utils;
 
-/**
- * Created by andichesoi on 03/05/2018.
- */
 
 public class Constants {
     public static final String ROOT_URL = "http://51.38.177.193/app/";

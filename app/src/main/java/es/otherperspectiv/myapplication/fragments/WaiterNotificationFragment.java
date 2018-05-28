@@ -1,7 +1,6 @@
-package es.otherperspectiv.myapplication;
+package es.otherperspectiv.myapplication.fragments;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -18,7 +16,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,20 +26,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.otherperspectiv.myapplication.utils.Constants;
+import es.otherperspectiv.myapplication.R;
+import es.otherperspectiv.myapplication.utils.RequestHandler;
+import es.otherperspectiv.myapplication.adapters.NotificationAdapter;
+import es.otherperspectiv.myapplication.models.Notification;
+import es.otherperspectiv.myapplication.models.User;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WaiterAddOrderFragment extends Fragment {
+public class WaiterNotificationFragment extends Fragment {
+
+    private List<Notification> notificationList;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private Button btnDeleteOrder;
-    private Button btnNextOrder;
 
-    private List<Item> itemList;
-
-
-    public WaiterAddOrderFragment() {
+    public WaiterNotificationFragment() {
         // Required empty public constructor
     }
 
@@ -51,23 +52,21 @@ public class WaiterAddOrderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_waiter_add_order, container, false);
+        return inflater.inflate(R.layout.fragment_waiter_notification, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.rvItems);
-        btnDeleteOrder = (Button) view.findViewById(R.id.btnDeleteOrder);
-        btnNextOrder = (Button) view.findViewById(R.id.btnNextOrder);
+        recyclerView = (RecyclerView) view.findViewById(R.id.rvNotifications);
 
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        itemList = new ArrayList<>();
+        notificationList = new ArrayList<>();
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
-                Constants.URL_GET_ITEMS,
+                Constants.URL_NOTIFICATIONS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -77,10 +76,9 @@ public class WaiterAddOrderFragment extends Fragment {
                                 JSONArray jsonArray = obj.getJSONArray("message");
                                 for(int i = 0; i < jsonArray.length(); i++){
                                     JSONObject o = jsonArray.getJSONObject(i);
-                                    itemList.add(new Item(o.getString("name"), o.getString("description"), o.getInt("price")));
-                                    System.out.println(o.getString("name"));
+                                    notificationList.add(new Notification(o.getString("description"), o.getString("createdAt")));
                                 }
-                                adapter = new ItemAdapter(itemList, getContext());
+                                adapter = new NotificationAdapter(notificationList, getContext());
                                 recyclerView.setAdapter(adapter);
                             }
                             else {
@@ -102,7 +100,7 @@ public class WaiterAddOrderFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("restaurantId", Integer.toString(User.getInstance(getContext()).getUserRestaurantId()));
+                params.put("userId", Integer.toString(User.getInstance(getContext()).getUserId()));
                 params.put("token", User.getInstance(getContext()).getToken());
                 return params;
             }
@@ -110,23 +108,7 @@ public class WaiterAddOrderFragment extends Fragment {
 
         RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
 
-
-
-        btnDeleteOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                User.getInstance(getContext()).deleteOrders();
-                Toast.makeText(getContext(), "You deleted all the items from the basket.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btnNextOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext(), WaiterProcessOrderActivity.class));
-            }
-        });
-
         super.onViewCreated(view, savedInstanceState);
     }
+
 }

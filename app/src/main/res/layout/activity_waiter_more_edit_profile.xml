@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="es.otherperspectiv.myapplication.WaiterMoreEditProfileActivity"
+    tools:context="es.otherperspectiv.myapplication.activities.WaiterMoreEditProfileActivity"
     android:background="@drawable/my_gradient_drawable">
 
     <EditText
@@ -50,7 +50,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="New Password (Optional)"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:backgroundTint="@color/colorAccent"
         android:textColor="@color/cardview_light_background"
         android:textColorHint="@color/cardview_light_background"
@@ -67,7 +67,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Current Password"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:backgroundTint="@color/colorAccent"
         android:textColor="@color/cardview_light_background"
         android:textColorHint="@color/cardview_light_background"

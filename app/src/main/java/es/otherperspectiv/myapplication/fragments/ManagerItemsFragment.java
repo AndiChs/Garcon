@@ -1,8 +1,8 @@
-package es.otherperspectiv.myapplication;
+package es.otherperspectiv.myapplication.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -28,45 +28,51 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.otherperspectiv.myapplication.utils.Constants;
+import es.otherperspectiv.myapplication.R;
+import es.otherperspectiv.myapplication.utils.RequestHandler;
+import es.otherperspectiv.myapplication.activities.ManagerAddItemActivity;
+import es.otherperspectiv.myapplication.adapters.ItemManagerAdapter;
+import es.otherperspectiv.myapplication.models.Item;
+import es.otherperspectiv.myapplication.models.User;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ManagerHomeFragment extends Fragment {
+public class ManagerItemsFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private CalendarView calendarView;
+    private Button btnAddItem;
 
-    private List<Shift> shiftList;
+    private List<Item> itemList;
 
-
-    public ManagerHomeFragment() {
+    public ManagerItemsFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_manager_home, container, false);
+        return inflater.inflate(R.layout.fragment_manager_items, container, false);
     }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.rvShifts);
-        calendarView = (CalendarView) view.findViewById(R.id.calendarView);
+        recyclerView = (RecyclerView) view.findViewById(R.id.rvItems);
+        btnAddItem = (Button) view.findViewById(R.id.btnAcceptRequest);
+
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        shiftList = new ArrayList<>();
-        System.out.println("Token:" + User.getInstance(getContext()).getToken());
-
+        itemList = new ArrayList<>();
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
-                Constants.URL_RESTAURANT_SHIFTS,
+                Constants.URL_GET_ITEMS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -76,10 +82,10 @@ public class ManagerHomeFragment extends Fragment {
                                 JSONArray jsonArray = obj.getJSONArray("message");
                                 for(int i = 0; i < jsonArray.length(); i++){
                                     JSONObject o = jsonArray.getJSONObject(i);
-                                    shiftList.add(new Shift(o.getString("date_start"), o.getInt("working_hours"), o.getString("name")));
-
+                                    itemList.add(new Item(o.getString("name"), o.getString("description"), o.getInt("price")));
+                                    System.out.println(o.getString("name"));
                                 }
-                                adapter = new ShiftAdapter(shiftList, getContext());
+                                adapter = new ItemManagerAdapter(itemList, getContext());
                                 recyclerView.setAdapter(adapter);
                             }
                             else {
@@ -88,6 +94,7 @@ public class ManagerHomeFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
                     }
                 },
                 new Response.ErrorListener() {
@@ -108,23 +115,14 @@ public class ManagerHomeFragment extends Fragment {
 
         RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
 
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        btnAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {
-                List<Shift> shiftList2 = new ArrayList<>();
-                i1++;
-                for(Shift shift : shiftList){
-                    String x = String.format("%d-%s-%s", i, i1 < 10 ? "0" + Integer.toString(i1) : Integer.toString(i1), i2 < 10 ? "0" + Integer.toString(i2) : Integer.toString(i2));
-                    if(shift.getDateStart().contains(x)){
-                        shiftList2.add(new Shift(shift.getDateStart(), shift.getWorkingHours(), shift.getUsername()));
-                    }
-
-                }
-                adapter = new ShiftAdapter(shiftList2, getContext());
-                recyclerView.setAdapter(adapter);
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), ManagerAddItemActivity.class));
             }
         });
 
         super.onViewCreated(view, savedInstanceState);
     }
+
 }

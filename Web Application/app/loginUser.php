@@ -1,6 +1,7 @@
 <?php
-
+require_once '../includes/UserAgent.php';
 require_once '../includes/DbOperations.php';
+require_once '../includes/UserAgent.php';
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
 	if(isset($_POST['username']) && isset($_POST['password'])){

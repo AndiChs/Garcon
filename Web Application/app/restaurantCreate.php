@@ -1,5 +1,5 @@
 <?php
-
+require_once '../includes/UserAgent.php';
 require_once '../includes/DbOperations.php';
 
 

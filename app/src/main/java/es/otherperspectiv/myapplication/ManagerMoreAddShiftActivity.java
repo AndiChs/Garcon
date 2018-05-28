@@ -119,7 +119,7 @@ public class ManagerMoreAddShiftActivity extends AppCompatActivity implements Vi
                         params.put("workingHours", etHours.getText().toString());
                         params.put("restaurantId", Integer.toString(User.getInstance(getApplicationContext()).getUserRestaurantId()));
                         params.put("dateStart", tvDate.getText().toString() + " " + tvHour.getText().toString());
-                        params.put("token", FirebaseInstanceId.getInstance().getToken());
+                        params.put("token", User.getInstance(getApplicationContext()).getToken());
                         return params;
                     }
                 };

@@ -76,7 +76,7 @@ public class ManagerAddItemActivity extends AppCompatActivity {
                         params.put("price", etItemPrice.getText().toString().trim());
                         params.put("name", etItemName.getText().toString().trim());
                         params.put("description", etItemDescription.getText().toString().trim());
-                        params.put("token", FirebaseInstanceId.getInstance().getToken());
+                        params.put("token", User.getInstance(getApplicationContext()).getToken());
                         return params;
                     }
                 };

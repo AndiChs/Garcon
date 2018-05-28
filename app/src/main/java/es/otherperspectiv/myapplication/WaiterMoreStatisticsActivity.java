@@ -72,7 +72,7 @@ public class WaiterMoreStatisticsActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("userId", Integer.toString(User.getInstance(WaiterMoreStatisticsActivity.this).getUserId()));
-                params.put("token", FirebaseInstanceId.getInstance().getToken());
+                params.put("token", User.getInstance(getApplicationContext()).getToken());
                 return params;
             }
         };

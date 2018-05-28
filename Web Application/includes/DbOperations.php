@@ -326,8 +326,8 @@
 
 			if($this->checkIfRestaurantRequestExists($user['id'], $restaurantId)){
 
-				$stmt = $this->con->prepare("UPDATE users SET restaurant_id = ? WHERE username = ? LIMIT 1");
-				$stmt->bind_param("is", $restaurantId, $name);
+				$stmt = $this->con->prepare("UPDATE users SET restaurant_id = ?, restaurant_manager = 0 WHERE id = ? LIMIT 1");
+				$stmt->bind_param("ii", $restaurantId, $user['id']);
 				$stmt->execute();
 
 				$stmt = $this->con->prepare("DELETE FROM restaurant_requests WHERE user_id = ?");
@@ -378,6 +378,38 @@
 	       return $result;
 		}
 
+		public function getRestaurantMembers($restaurantId){
+			$stmt = $this->con->prepare("SELECT DISTINCT token FROM users WHERE restaurant_id = ? AND restaurant_manager = 0");
+			$stmt->bind_param("i", $restaurantId);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->bind_result($token);
+
+			$array = array();
+
+
+			while ( $row = $stmt->fetch() ) {
+			    $array[] = $token;
+			}
+			return $array;
+		}
+
+		public function sendNotificationToAllMembers($message, $restaurantId){
+			$stmt = $this->con->prepare("SELECT id FROM users WHERE restaurant_id = ?");
+			$stmt->bind_param("i", $restaurantId);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->bind_result($id);
+
+
+			while ( $stmt->fetch() ) {
+			    $stmt2 = $this->con->prepare("INSERT INTO notifications (description, user_id) VALUES (?, ?)");
+			    $stmt2->bind_param("si", $message, $id);
+			    $stmt2->execute();
+			}
+			return 1;
+		}
+
 		public function userGetNotifications($userId){
 			$stmt = $this->con->prepare("SELECT description, createdAt FROM notifications WHERE user_id = ? ORDER BY createdAt DESC");
 			$stmt->bind_param("i", $userId);
@@ -398,11 +430,17 @@
 		}
 
 		public function checkToken($token){
-			$stmt = $this->con->prepare("SELECT id FROM users WHERE token = ? LIMIT 1");
+			$stmt = $this->con->prepare("SELECT id FROM users WHERE token_auth = ? LIMIT 1");
 			$stmt->bind_param("s", $token);
 			$stmt->execute();
 			$stmt->store_result();
 			return $stmt->num_rows > 0;
+		}
+
+		public function updateUserAuthToken($token, $username){
+			$stmt = $this->con->prepare("UPDATE users SET token_auth = ? WHERE username = ? LIMIT 1");
+			$stmt->bind_param("ss", $token, $username);
+			return $stmt->execute();
 		}
 
 		public function setUserAsManager($userId, $restaurantId){

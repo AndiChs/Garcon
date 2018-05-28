@@ -116,7 +116,7 @@ public class CreateRestaurantActivity extends AppCompatActivity {
                 params.put("cvr", CVR);
                 params.put("address", address);
                 params.put("name", name);
-                params.put("token", FirebaseInstanceId.getInstance().getToken());
+                params.put("token", User.getInstance(getApplicationContext()).getToken());
                 params.put("userId", Integer.toString(User.getInstance(getApplicationContext()).getUserId()));
                 return params;
             }

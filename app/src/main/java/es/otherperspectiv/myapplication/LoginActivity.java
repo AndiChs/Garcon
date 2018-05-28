@@ -34,8 +34,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_log_in);
 
         if(User.getInstance(this).isLoggedIn()){
-            finish();
             loadUserDataByUsername();
+            finish();
             return;
         }
 
@@ -45,16 +45,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         findViewById(R.id.buttonSignUp).setOnClickListener(this);
         findViewById(R.id.buttonLogin).setOnClickListener(this);
+        System.out.println("Token:" + FirebaseInstanceId.getInstance().getToken());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if(User.getInstance(this).isLoggedIn()){
-            finish();
             loadUserDataByUsername();
+            finish();
         }
-        System.out.println("twst");
     }
 
 
@@ -113,7 +113,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     obj.getString("name"),
                     obj.getInt("restaurantId"),
                     obj.getInt("restaurantManager"),
-                    obj.getInt("adminLevel")
+                    obj.getInt("adminLevel"),
+                    obj.getString("token")
             );
             FirebaseMessaging.getInstance().subscribeToTopic("notification");
             registerToken(FirebaseInstanceId.getInstance().getToken());
@@ -145,7 +146,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("username", User.getInstance(getApplicationContext()).getUsername());
-                params.put("token", token);
+                params.put("tokenFirebase", token);
+                params.put("token", User.getInstance(getApplicationContext()).getToken());
                 return params;
             }
         };
@@ -220,6 +222,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("username", User.getInstance(LoginActivity.this).getUsername());
+                params.put("token", User.getInstance(getApplicationContext()).getToken());
                 return params;
             }
         };

@@ -71,7 +71,7 @@ public class JoinRestaurantActivity extends AppCompatActivity {
                         HashMap<String, String> params = new HashMap<>();
                         params.put("restaurantId", restaurantId);
                         params.put("userId", userId);
-                        params.put("token", FirebaseInstanceId.getInstance().getToken());
+                        params.put("token", User.getInstance(getApplicationContext()).getToken());
                         return params;
                     }
                 };

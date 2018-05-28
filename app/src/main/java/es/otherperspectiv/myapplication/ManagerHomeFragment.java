@@ -62,6 +62,7 @@ public class ManagerHomeFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         shiftList = new ArrayList<>();
+        System.out.println("Token:" + User.getInstance(getContext()).getToken());
 
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
@@ -100,6 +101,7 @@ public class ManagerHomeFragment extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("restaurantId", Integer.toString(User.getInstance(getContext()).getUserRestaurantId()));
+                params.put("token", User.getInstance(getContext()).getToken());
                 return params;
             }
         };

@@ -103,7 +103,7 @@ public class WaiterMoreEditProfileActivity extends AppCompatActivity {
                         params.put("password", etCurrentPassword.getText().toString().trim());
                         params.put("newUsername", etEmailAddress.getText().toString().trim());
                         params.put("username", User.getInstance(WaiterMoreEditProfileActivity.this).getUsername());
-                        params.put("token", FirebaseInstanceId.getInstance().getToken());
+                        params.put("token", User.getInstance(getApplicationContext()).getToken());
                         return params;
                     }
                 };

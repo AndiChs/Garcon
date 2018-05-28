@@ -39,6 +39,7 @@ public class ManagerMoreFragment extends Fragment implements View.OnClickListene
         view.findViewById(R.id.btnStats).setOnClickListener(this);
         view.findViewById(R.id.btnAddShift).setOnClickListener(this);
         view.findViewById(R.id.btnRequests).setOnClickListener(this);
+        view.findViewById(R.id.btnSendNotification).setOnClickListener(this);
     }
 
     @Override
@@ -65,6 +66,10 @@ public class ManagerMoreFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.btnRequests:
                 startActivity(new Intent(getContext(), ManagerMoreRequest.class));
+                break;
+
+            case R.id.btnSendNotification:
+                startActivity(new Intent(getContext(), ManagerMoreSendNotificationActivity.class));
                 break;
         }
     }

@@ -61,7 +61,7 @@ public class ManagerMoreRequest extends AppCompatActivity {
                         Map<String, String> params = new HashMap<>();
                         params.put("name", etEmail.getText().toString());
                         params.put("restaurantId", Integer.toString(User.getInstance(ManagerMoreRequest.this).getUserRestaurantId()));
-                        params.put("token", FirebaseInstanceId.getInstance().getToken());
+                        params.put("token", User.getInstance(getApplicationContext()).getToken());
                         return params;
                     }
                 };

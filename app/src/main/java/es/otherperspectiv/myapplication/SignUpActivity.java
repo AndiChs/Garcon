@@ -83,7 +83,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
         progressDialog.setMessage("Registering account...");
-        progressDialog.show();
+        //progressDialog.show();
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST,

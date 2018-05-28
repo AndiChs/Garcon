@@ -17,6 +17,7 @@ public class User {
     private static final String KEY_IS_MANAGER = "manager";
     private static final String KEY_ORDER = "order";
     private static final String KEY_ORDER_PRICE = "orderPrice";
+    private static final String KEY_TOKEN = "token";
 
     private User(Context context) {
         mCtx = context;
@@ -30,7 +31,7 @@ public class User {
         return mInstance;
     }
 
-    public boolean userLogin(int id, String username, String name, int restaurantId, int isManager, int adminLevel){
+    public boolean userLogin(int id, String username, String name, int restaurantId, int isManager, int adminLevel, String token){
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(KEY_USER_ID, id);
@@ -38,6 +39,7 @@ public class User {
         editor.putString(KEY_NAME, name);
         editor.putInt(KEY_RESTAURANT_ID, restaurantId);
         editor.putInt(KEY_IS_MANAGER, isManager);
+        editor.putString(KEY_TOKEN, token);
         editor.apply();
 
         return true;
@@ -66,6 +68,11 @@ public class User {
     public String getOrderDescription(){
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(KEY_ORDER, "");
+    }
+
+    public String getToken(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(KEY_TOKEN, "");
     }
 
     public int getOrderPrice(){

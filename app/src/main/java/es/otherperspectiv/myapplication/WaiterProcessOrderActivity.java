@@ -88,7 +88,7 @@ public class WaiterProcessOrderActivity extends AppCompatActivity {
                         params.put("tableId", etTable.getText().toString().trim());
                         params.put("orderDescription", User.getInstance(WaiterProcessOrderActivity.this).getOrderDescription());
                         params.put("orderPrice", Integer.toString(User.getInstance(WaiterProcessOrderActivity.this).getOrderPrice()));
-                        params.put("token", FirebaseInstanceId.getInstance().getToken());
+                        params.put("token", User.getInstance(getApplicationContext()).getToken());
                         return params;
                     }
                 };

@@ -97,7 +97,7 @@ public class WaiterNotificationFragment extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("userId", Integer.toString(User.getInstance(getContext()).getUserId()));
-                params.put("token", FirebaseInstanceId.getInstance().getToken());
+                params.put("token", User.getInstance(getContext()).getToken());
                 return params;
             }
         };

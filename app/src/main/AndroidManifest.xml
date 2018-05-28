@@ -35,23 +35,20 @@
         <activity android:name=".ManagerAddItemActivity" />
         <activity android:name=".ManagerMoreStatisticsActivity" />
         <activity android:name=".ManagerMoreAddShiftActivity" />
-        <activity android:name=".ManagerMoreRequest"/>
+        <activity android:name=".ManagerMoreRequest" />
 
-        <service
-            android:name=".FirebaseMessagingService">
+        <service android:name=".FirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".FirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-
-        <service
-            android:name=".FirebaseInstanceIDService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
-
+        <activity android:name=".ManagerMoreSendNotificationActivity"></activity>
     </application>
 
 </manifest>

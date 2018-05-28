@@ -103,7 +103,7 @@ public class WaiterAddOrderFragment extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("restaurantId", Integer.toString(User.getInstance(getContext()).getUserRestaurantId()));
-                params.put("token", FirebaseInstanceId.getInstance().getToken());
+                params.put("token", User.getInstance(getContext()).getToken());
                 return params;
             }
         };

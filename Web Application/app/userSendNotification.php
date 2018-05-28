@@ -1,15 +1,16 @@
 <?php
 
 require_once '../includes/DbOperations.php';
-require_once '../includes/Auth.php';
+//require_once '../includes/Auth.php';
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
-	if(isset($_POST['message'])){
+	if(isset($_POST['message']) && isset($_POST['restaurantId'])){
 		// operate the date further 
 		$db = new DbOperations();
-		$token[] = "ddfzNzudWGTI:APA91bFHlxhXwrWQCQiLK-msZd3rOlj-tvbAobSm3vuekUNd491zMsZQWCDznaRc_kV-JlDxYZUeSNd3GOhsrDJaVa-yiRMd5to6Ry4LDM31egTf2Qwy4gGGppSBpURRtH5iYMeyziRe";
+		$token = $db->getRestaurantMembers($_POST['restaurantId'], $_POST['message']);
 		$message = array("message" => $_POST['message']);
 		$response = $db->sendNotification($token, $message);
+		$db->sendNotificationToAllMembers($_POST['restaurantId'], $_POST['message']);
 		
 
 	} else{

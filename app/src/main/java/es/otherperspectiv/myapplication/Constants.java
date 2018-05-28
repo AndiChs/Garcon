@@ -27,6 +27,8 @@ public class Constants {
     public static final String URL_ADD_SHIFT = ROOT_URL + "userAddShift.php";
     public static final String URL_REGISTER_TOKEN = ROOT_URL + "userRegisterToken.php";
     public static final String URL_NOTIFICATIONS = ROOT_URL + "userNotifications.php";
+    public static final String URL_SEND_NOTIFICATION = ROOT_URL + "userSendNotification.php";
+
 
 
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="es.otherperspectiv.myapplication.activities.CreateRestaurantActivity"
-    android:background="@drawable/my_gradient_drawable">
+    android:background="@drawable/gradient">
 
     <EditText
         android:id="@+id/editTextCVR"
